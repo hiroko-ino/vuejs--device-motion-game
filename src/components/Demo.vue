@@ -3,7 +3,8 @@ import { computed, reactive } from 'vue'
 import { useDeviceMotion } from '@vueuse/core'
 
 const motion = reactive(useDeviceMotion())
-const text = computed(() => JSON.stringify(motion, null, 2))
+const tempText = Object.assign({}, motion);
+const text = computed(() => JSON.stringify(tempText, null, 2))
 </script>
 
 <template>
@@ -11,8 +12,4 @@ const text = computed(() => JSON.stringify(motion, null, 2))
     Device Motion:
   </note>
   <pre lang="json">{{ text }}</pre>
-  <p>motion.x {{ motion.acceleration?.x }}</p>
-  <div>
-    {{ motion }}
-  </div>
 </template>
