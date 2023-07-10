@@ -37,7 +37,7 @@ const harisenbonLeftStyle = computed(() => {
 watch(
   harisenbonLeftStyle, () => {
     if (harisenbonLeftStyle.value === 0) bottleLeftClashes.value++
-    if (harisenbonLeftStyle.value === BOTTLE_WIDTH - HARISENBON_WIDTH / 2) bottleRightClashes.value++
+    if (harisenbonLeftStyle.value === BOTTLE_WIDTH - HARISENBON_WIDTH) bottleRightClashes.value++
   }
 )
 
