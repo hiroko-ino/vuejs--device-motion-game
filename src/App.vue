@@ -2,16 +2,11 @@
 import { computed, ref, watch } from 'vue'
 import Bottle from './components/Bottle.vue'
 import Harisenbon from './components/Harisenbon.vue'
-import { useDeviceMotion, useDeviceOrientation } from '@vueuse/core'
+import { useDeviceMotion, useScreenOrientation } from '@vueuse/core'
 import { HARISENBON_WIDTH, BOTTLE_WIDTH } from './Const'
 
 const { accelerationIncludingGravity, rotationRate } = useDeviceMotion()
-const {
-  isAbsolute,
-  alpha,
-  beta,
-  gamma,
-} = useDeviceOrientation()
+const { orientation } = useScreenOrientation()
 
 /**
  * ハリセンボンのwrapperのref
@@ -32,11 +27,11 @@ const bottleLeftClashes = ref(0)
  * ハリセンボンのwrapperスタイルのleft
  */
 const harisenbonLeftStyle = computed(() => {
-  const xTilt = accelerationIncludingGravity.value?.x
+  const tilt = orientation.value === 'portrait-secondary' || 'portrait-primary' ? accelerationIncludingGravity.value?.x : accelerationIncludingGravity.value?.y
   if (!moveRef.value) return BOTTLE_WIDTH / 2 - HARISENBON_WIDTH / 2
   const currentPosition = parseInt(moveRef.value.style.left || '0', 10) || 0
   console.log(currentPosition)
-  const newPosition = currentPosition + (xTilt || 0)
+  const newPosition = currentPosition + (tilt || 0)
   return Math.max(0, Math.min(BOTTLE_WIDTH - HARISENBON_WIDTH, newPosition)) // ボトル内に収める
 })
 
@@ -59,10 +54,6 @@ watch(harisenbonLeftStyle, () => {
       right: {{ bottleRightClashes }}
       harisenbonLeftStyle: {{ harisenbonLeftStyle }}
       rotationRate.value?.beta: {{ rotationRate?.beta }}
-      isAbsolute: {{ isAbsolute }}
-      alpha: {{ alpha }}
-      beta: {{ beta }}
-      gamma: {{ gamma }}
     </div>
     <Bottle>
       <div ref="moveRef" class="move" :style="{ left: `${harisenbonLeftStyle}px` }">
