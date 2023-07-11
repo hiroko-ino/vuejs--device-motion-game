@@ -64,6 +64,8 @@ watch(
     <div class="info">
       left: {{ bottleLeftClashes }}
       right: {{ bottleRightClashes }}
+      harisenbonLeftStyle: {{ harisenbonLeftStyle }}
+      output: {{ output }}
     </div>
     <Bottle>
       <div ref="moveRef" class="move" :style="{ left: `${output}px` }">
