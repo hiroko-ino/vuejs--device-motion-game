@@ -27,18 +27,13 @@ const bottleLeftClashes = ref(0)
  * ハリセンボンのwrapperスタイルのleft
  */
 const harisenbonBottomStyle = computed(() => {
-  const tilt = accelerationIncludingGravity.value?.y
+  const tilt = orientation.value === 'portrait-secondary' || 'portrait-primary' ? accelerationIncludingGravity.value?.y : accelerationIncludingGravity.value?.x
   if (!moveRef.value) return BOTTLE_HEIGHT / 2 - HARISENBON_WIDTH / 2
   const currentPosition = parseInt(moveRef.value.style.bottom || '0', 10) || 0
   console.log(currentPosition)
   const newPosition = currentPosition + (tilt || 0)
   return Math.max(0, Math.min(BOTTLE_HEIGHT - HARISENBON_WIDTH, newPosition)) // ボトル内に収める
 })
-
-/**
- * デバイスの向き
- */
-const screenOrientation = computed(() => orientation.value === 'portrait-secondary' || 'portrait-primary' ? 'portrait' : 'landscape')
 
 watch(harisenbonBottomStyle, () => {
   if (harisenbonBottomStyle.value === 0) {
@@ -54,7 +49,8 @@ watch(harisenbonBottomStyle, () => {
 
 <template>
   <div class="wrapper">
-    <Bottle orientation="screenOrientation">
+    <div>{{ accelerationIncludingGravity?.x }}</div>
+    <Bottle>
       <div ref="moveRef" class="move" :style="{ bottom: `${harisenbonBottomStyle}px` }">
         <Harisenbon />
       </div>
