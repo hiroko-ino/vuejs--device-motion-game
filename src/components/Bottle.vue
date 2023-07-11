@@ -9,8 +9,8 @@
 <style scoped>
 .bottle {
   position: relative;
-  width: 200px;
-  height: 300px;
+  width: 300px;
+  height: 200px;
   background-color: blue;
 }
 </style>
