@@ -42,20 +42,27 @@ const output = useTransition(harisenbonLeftStyle, {
   transition: TransitionPresets.linear,
 })
 
-watch(
-  harisenbonLeftStyle, () => {
-    if (harisenbonLeftStyle.value === 0) {
-      bottleLeftClashes.value++
-      if (!moveRef.value) return
-      moveRef.value.style.left = `${rotationRate.value?.beta || 0}px`
-    }
-    if (harisenbonLeftStyle.value === BOTTLE_WIDTH - HARISENBON_WIDTH) {
-      bottleRightClashes.value++
-      if (!moveRef.value) return
-      moveRef.value.style.left = `${BOTTLE_WIDTH - HARISENBON_WIDTH + (rotationRate.value?.beta || 0)}px`
-    }
+watch(harisenbonLeftStyle, () => {
+  if (harisenbonLeftStyle.value === 0) {
+    bottleLeftClashes.value++
+    if (!moveRef.value) return
+
+    const rotationSpeed = rotationRate.value?.beta || 0
+    const newPosition = BOTTLE_WIDTH - HARISENBON_WIDTH + rotationSpeed
+
+    moveRef.value.style.left = `${newPosition}px`
   }
-)
+  if (harisenbonLeftStyle.value === BOTTLE_WIDTH - HARISENBON_WIDTH) {
+    bottleRightClashes.value++
+    if (!moveRef.value) return
+
+    const rotationSpeed = rotationRate.value?.beta || 0
+    const newPosition = rotationSpeed
+
+    moveRef.value.style.left = `${newPosition}px`
+  }
+})
+
 
 </script>
 
