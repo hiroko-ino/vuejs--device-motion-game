@@ -2,10 +2,11 @@
 import { computed, ref, watch } from 'vue'
 import Bottle from './components/Bottle.vue'
 import Harisenbon from './components/Harisenbon.vue'
-import { useDeviceMotion } from '@vueuse/core'
+import { useDeviceMotion, useScreenOrientation } from '@vueuse/core'
 import { HARISENBON_WIDTH, BOTTLE_WIDTH } from './Const'
 
 const { accelerationIncludingGravity, rotationRate } = useDeviceMotion()
+const { isSupported, orientation } = useScreenOrientation()
 
 /**
  * ハリセンボンのwrapperのref
@@ -53,6 +54,7 @@ watch(harisenbonLeftStyle, () => {
       right: {{ bottleRightClashes }}
       harisenbonLeftStyle: {{ harisenbonLeftStyle }}
       rotationRate.value?.beta: {{ rotationRate?.beta }}
+      orientation: {{ orientation }}
     </div>
     <Bottle>
       <div ref="moveRef" class="move" :style="{ left: `${harisenbonLeftStyle}px` }">
