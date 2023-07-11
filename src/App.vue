@@ -2,10 +2,11 @@
 import { computed, ref, watch } from 'vue'
 import Bottle from './components/Bottle.vue'
 import Harisenbon from './components/Harisenbon.vue'
-import { useDeviceMotion, useTransition } from '@vueuse/core'
+import { useDeviceMotion, useScreenOrientation } from '@vueuse/core'
 import { HARISENBON_WIDTH, BOTTLE_WIDTH } from './Const'
 
 const { accelerationIncludingGravity, rotationRate } = useDeviceMotion()
+const { isSupported, orientation } = useScreenOrientation()
 
 /**
  * ハリセンボンのwrapperのref
@@ -34,14 +35,6 @@ const harisenbonLeftStyle = computed(() => {
   return Math.max(0, Math.min(BOTTLE_WIDTH - HARISENBON_WIDTH, newPosition)) // ボトル内に収める
 })
 
- /**
-  * イージングをかける
-  */
-const output = useTransition(harisenbonLeftStyle, {
-  duration: 50,
-  transition: [0.75, 0, 0.25, 1],
-})
-
 watch(harisenbonLeftStyle, () => {
   if (harisenbonLeftStyle.value === 0) {
     bottleLeftClashes.value++
@@ -60,11 +53,11 @@ watch(harisenbonLeftStyle, () => {
       left: {{ bottleLeftClashes }}
       right: {{ bottleRightClashes }}
       harisenbonLeftStyle: {{ harisenbonLeftStyle }}
-      output: {{ output }}
       rotationRate.value?.beta: {{ rotationRate?.beta }}
+      orientation: {{ orientation }}
     </div>
     <Bottle>
-      <div ref="moveRef" class="move" :style="{ left: `${output}px` }">
+      <div ref="moveRef" class="move" :style="{ left: `${harisenbonLeftStyle}px` }">
         <Harisenbon />
       </div>
     </Bottle>
