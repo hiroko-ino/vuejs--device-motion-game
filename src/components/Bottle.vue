@@ -1,14 +1,7 @@
-<script setup lang="ts">
-defineProps({
-  orientation: {
-    type: String,
-    default: 'portrait'
-  }
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="bottle" :class="{ 'bottle--portrait': orientation === 'portrait', 'bottle--landscape': orientation === 'landscape' }">
+  <div class="bottle">
     <slot />
   </div>
 </template>
@@ -16,16 +9,8 @@ defineProps({
 <style scoped>
 .bottle {
   position: relative;
-  background-color: blue;
-}
-
-.bottle--portrait {
-  width: 300px;
-  height: 200px;
-}
-
-.bottle--landscape {
   width: 200px;
   height: 300px;
+  background-color: blue;
 }
 </style>
