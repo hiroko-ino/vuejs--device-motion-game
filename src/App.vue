@@ -6,9 +6,7 @@ import { useDeviceMotion, useScreenOrientation } from '@vueuse/core'
 import { HARISENBON_WIDTH, BOTTLE_HEIGHT } from './Const'
 
 const { accelerationIncludingGravity } = useDeviceMotion()
-const { lockOrientation } = useScreenOrientation()
-
-lockOrientation('landscape-primary')
+const { orientation } = useScreenOrientation()
 
 /**
  * ハリセンボンのwrapperのref
@@ -29,7 +27,7 @@ const bottleLeftClashes = ref(0)
  * ハリセンボンのwrapperスタイルのleft
  */
 const harisenbonBottomStyle = computed(() => {
-  const tilt = accelerationIncludingGravity.value?.y
+  const tilt = orientation.value === 'portrait-secondary' || orientation.value === 'portrait-primary' ? accelerationIncludingGravity.value?.y : accelerationIncludingGravity.value?.x
   if (!moveRef.value) return BOTTLE_HEIGHT / 2 - HARISENBON_WIDTH / 2
   const currentPosition = parseInt(moveRef.value.style.bottom || '0', 10) || 0
   console.log(currentPosition)
