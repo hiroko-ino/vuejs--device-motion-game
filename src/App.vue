@@ -27,7 +27,7 @@ const bottleLeftClashes = ref(0)
  * ハリセンボンのwrapperスタイルのleft
  */
 const harisenbonBottomStyle = computed(() => {
-  const tilt = orientation.value === 'portrait-secondary' || 'portrait-primary' ? accelerationIncludingGravity.value?.y : accelerationIncludingGravity.value?.z
+  const tilt = orientation.value === 'portrait-secondary' || 'portrait-primary' ? accelerationIncludingGravity.value?.y : accelerationIncludingGravity.value?.x
   if (!moveRef.value) return BOTTLE_HEIGHT / 2 - HARISENBON_WIDTH / 2
   const currentPosition = parseInt(moveRef.value.style.bottom || '0', 10) || 0
   console.log(currentPosition)
