@@ -47,12 +47,12 @@ watch(
     if (harisenbonLeftStyle.value === 0) {
       bottleLeftClashes.value++
       if (!moveRef.value) return
-      moveRef.value.style.left = `${-(rotationRate.value?.beta || 0)}px`
+      moveRef.value.style.left = `${rotationRate.value?.beta || 0}px`
     }
     if (harisenbonLeftStyle.value === BOTTLE_WIDTH - HARISENBON_WIDTH) {
       bottleRightClashes.value++
       if (!moveRef.value) return
-      moveRef.value.style.left = `${BOTTLE_WIDTH - (rotationRate.value?.beta || 0)}px`
+      moveRef.value.style.left = `${BOTTLE_WIDTH - HARISENBON_WIDTH + (rotationRate.value?.beta || 0)}px`
     }
   }
 )
