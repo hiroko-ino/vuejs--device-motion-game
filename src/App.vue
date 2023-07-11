@@ -48,7 +48,7 @@ watch(harisenbonLeftStyle, () => {
     if (!moveRef.value) return
 
     const rotationSpeed = rotationRate.value?.beta || 0
-    const newPosition = BOTTLE_WIDTH - HARISENBON_WIDTH + rotationSpeed
+    const newPosition = -rotationSpeed * 0.3
 
     moveRef.value.style.left = `${newPosition}px`
   }
@@ -57,7 +57,7 @@ watch(harisenbonLeftStyle, () => {
     if (!moveRef.value) return
 
     const rotationSpeed = rotationRate.value?.beta || 0
-    const newPosition = rotationSpeed
+    const newPosition =  (BOTTLE_WIDTH - HARISENBON_WIDTH - rotationSpeed) * 0.3
 
     moveRef.value.style.left = `${newPosition}px`
   }
