@@ -38,8 +38,8 @@ const harisenbonLeftStyle = computed(() => {
   * イージングをかける
   */
 const output = useTransition(harisenbonLeftStyle, {
-  duration: 100,
-  transition: TransitionPresets.easeInOutCubic,
+  duration: 10,
+  transition: TransitionPresets.linear,
 })
 
 watch(
