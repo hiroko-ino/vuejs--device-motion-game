@@ -52,7 +52,7 @@ watch(
     if (harisenbonLeftStyle.value === BOTTLE_WIDTH - HARISENBON_WIDTH) {
       bottleRightClashes.value++
       if (!moveRef.value) return
-      moveRef.value.style.left = `${-(rotationRate.value?.beta || 0)}px`
+      moveRef.value.style.left = `${BOTTLE_WIDTH - (rotationRate.value?.beta || 0)}px`
     }
   }
 )
@@ -66,6 +66,7 @@ watch(
       right: {{ bottleRightClashes }}
       harisenbonLeftStyle: {{ harisenbonLeftStyle }}
       output: {{ output }}
+      rotationRate.value?.beta: {{ rotationRate?.beta }}
     </div>
     <Bottle>
       <div ref="moveRef" class="move" :style="{ left: `${output}px` }">
