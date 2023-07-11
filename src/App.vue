@@ -3,9 +3,9 @@ import { computed, ref, watch } from 'vue'
 import Bottle from './components/Bottle.vue'
 import Harisenbon from './components/Harisenbon.vue'
 import { useDeviceMotion, useScreenOrientation } from '@vueuse/core'
-import { HARISENBON_WIDTH, BOTTLE_WIDTH } from './Const'
+import { HARISENBON_WIDTH, BOTTLE_HEIGHT } from './Const'
 
-const { accelerationIncludingGravity, rotationRate } = useDeviceMotion()
+const { accelerationIncludingGravity } = useDeviceMotion()
 const { orientation } = useScreenOrientation()
 
 /**
@@ -26,20 +26,20 @@ const bottleLeftClashes = ref(0)
 /**
  * ハリセンボンのwrapperスタイルのleft
  */
-const harisenbonLeftStyle = computed(() => {
-  const tilt = orientation.value === 'portrait-secondary' || 'portrait-primary' ? accelerationIncludingGravity.value?.x : accelerationIncludingGravity.value?.y
-  if (!moveRef.value) return BOTTLE_WIDTH / 2 - HARISENBON_WIDTH / 2
-  const currentPosition = parseInt(moveRef.value.style.left || '0', 10) || 0
+const harisenbonBottomStyle = computed(() => {
+  const tilt = orientation.value === 'portrait-secondary' || 'portrait-primary' ? accelerationIncludingGravity.value?.x : accelerationIncludingGravity.value?.x
+  if (!moveRef.value) return BOTTLE_HEIGHT / 2 - HARISENBON_WIDTH / 2
+  const currentPosition = parseInt(moveRef.value.style.bottom || '0', 10) || 0
   console.log(currentPosition)
   const newPosition = currentPosition + (tilt || 0)
-  return Math.max(0, Math.min(BOTTLE_WIDTH - HARISENBON_WIDTH, newPosition)) // ボトル内に収める
+  return Math.max(0, Math.min(BOTTLE_HEIGHT - HARISENBON_WIDTH, newPosition)) // ボトル内に収める
 })
 
-watch(harisenbonLeftStyle, () => {
-  if (harisenbonLeftStyle.value === 0) {
+watch(harisenbonBottomStyle, () => {
+  if (harisenbonBottomStyle.value === 0) {
     bottleLeftClashes.value++
   }
-  if (harisenbonLeftStyle.value === BOTTLE_WIDTH - HARISENBON_WIDTH) {
+  if (harisenbonBottomStyle.value === BOTTLE_HEIGHT - HARISENBON_WIDTH) {
     bottleRightClashes.value++
   }
 })
@@ -49,14 +49,8 @@ watch(harisenbonLeftStyle, () => {
 
 <template>
   <div class="wrapper">
-    <div class="info">
-      left: {{ bottleLeftClashes }}
-      right: {{ bottleRightClashes }}
-      harisenbonLeftStyle: {{ harisenbonLeftStyle }}
-      rotationRate.value?.beta: {{ rotationRate?.beta }}
-    </div>
     <Bottle>
-      <div ref="moveRef" class="move" :style="{ left: `${harisenbonLeftStyle}px` }">
+      <div ref="moveRef" class="move" :style="{ bottom: `${harisenbonBottomStyle}px` }">
         <Harisenbon />
       </div>
     </Bottle>
@@ -71,6 +65,6 @@ watch(harisenbonLeftStyle, () => {
 
 .move {
   position: absolute;
-  top: calc(50% - 25px);
+  left: calc(50% - 25px);
 }
 </style>
