@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import Bottle from './components/Bottle.vue'
 import Harisenbon from './components/Harisenbon.vue'
-import { useDeviceMotion, useTransition, TransitionPresets } from '@vueuse/core'
+import { useDeviceMotion, useTransition } from '@vueuse/core'
 import { HARISENBON_WIDTH, BOTTLE_WIDTH } from './Const'
 
 const { accelerationIncludingGravity, rotationRate } = useDeviceMotion()
@@ -38,28 +38,16 @@ const harisenbonLeftStyle = computed(() => {
   * イージングをかける
   */
 const output = useTransition(harisenbonLeftStyle, {
-  duration: 10,
-  transition: TransitionPresets.linear,
+  duration: 50,
+  transition: [0.75, 0, 0.25, 1],
 })
 
 watch(harisenbonLeftStyle, () => {
   if (harisenbonLeftStyle.value === 0) {
     bottleLeftClashes.value++
-    if (!moveRef.value) return
-
-    const rotationSpeed = rotationRate.value?.beta || 0
-    const newPosition = -rotationSpeed * 0.3
-
-    moveRef.value.style.left = `${newPosition}px`
   }
   if (harisenbonLeftStyle.value === BOTTLE_WIDTH - HARISENBON_WIDTH) {
     bottleRightClashes.value++
-    if (!moveRef.value) return
-
-    const rotationSpeed = rotationRate.value?.beta || 0
-    const newPosition =  (BOTTLE_WIDTH - HARISENBON_WIDTH - rotationSpeed) * 0.3
-
-    moveRef.value.style.left = `${newPosition}px`
   }
 })
 
