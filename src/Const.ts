@@ -6,4 +6,4 @@ export const HARISENBON_WIDTH = 50
 /**
  * BottleのWidth
  */
-export const BOTTLE_HEIGHT = 200
+export const BOTTLE_HEIGHT = 150

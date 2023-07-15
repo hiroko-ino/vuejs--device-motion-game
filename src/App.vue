@@ -53,9 +53,9 @@ watch(harisenbonBottomStyle, () => {
 
 <template>
   <div class="wrapper">
-    <dialog class="dialog" :open="!canPlayGame">
+    <!-- <dialog class="dialog" :open="!canPlayGame">
       このゲームはお使いのデバイスでは使用できません！
-    </dialog>
+    </dialog> -->
     <Bottle>
       <div ref="moveRef" class="move" :style="{ bottom: `${harisenbonBottomStyle}px` }">
         <Harisenbon />
@@ -72,7 +72,7 @@ watch(harisenbonBottomStyle, () => {
 
 .move {
   position: absolute;
-  left: calc(50% - 25px);
+  left: calc(50% - 25px + 20px);
 }
 
 .dialog {
