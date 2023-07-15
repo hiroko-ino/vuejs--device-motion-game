@@ -6,7 +6,7 @@ import { useDeviceMotion, useScreenOrientation } from '@vueuse/core'
 import { HARISENBON_WIDTH, BOTTLE_HEIGHT } from './Const'
 
 const { accelerationIncludingGravity } = useDeviceMotion()
-const { orientation } = useScreenOrientation()
+const { orientation, isSupported } = useScreenOrientation()
 
 /**
  * ハリセンボンのwrapperのref
@@ -22,6 +22,11 @@ const bottleLeftClashes = ref(0)
  * ボトルの右のヒビの入った回数
  */
  const bottleRightClashes = ref(0)
+
+ /**
+  * ゲームがプレイ可能かどうか
+  */
+ const canPlayGame = computed(() => window.DeviceOrientationEvent && isSupported && accelerationIncludingGravity.value?.x !== null)
 
 /**
  * ハリセンボンのwrapperスタイルのleft
@@ -44,12 +49,13 @@ watch(harisenbonBottomStyle, () => {
   }
 })
 
-
 </script>
 
 <template>
   <div class="wrapper">
-    <div>{{ accelerationIncludingGravity?.x }}</div>
+    <!-- <dialog class="dialog" :open="!canPlayGame">
+      このゲームはお使いのデバイスでは使用できません！
+    </dialog> -->
     <Bottle>
       <div ref="moveRef" class="move" :style="{ bottom: `${harisenbonBottomStyle}px` }">
         <Harisenbon />
@@ -66,6 +72,10 @@ watch(harisenbonBottomStyle, () => {
 
 .move {
   position: absolute;
-  left: calc(50% - 25px);
+  left: calc(50% - 25px + 20px);
+}
+
+.dialog {
+  z-index: 100;
 }
 </style>
