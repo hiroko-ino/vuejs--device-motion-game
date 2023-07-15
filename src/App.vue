@@ -5,7 +5,7 @@ import Harisenbon from './components/Harisenbon.vue'
 import { useDeviceMotion, useScreenOrientation } from '@vueuse/core'
 import { HARISENBON_WIDTH, BOTTLE_HEIGHT } from './Const'
 
-const { accelerationIncludingGravity } = useDeviceMotion()
+const { accelerationIncludingGravity, rotationRate } = useDeviceMotion()
 const { orientation, isSupported } = useScreenOrientation()
 
 /**
@@ -16,12 +16,12 @@ const moveRef = ref<HTMLDivElement | null>(null)
 /**
  * ボトルの左側のヒビの入った回数
  */
-const bottleLeftClashes = ref(0)
+const bottleBottomClashes = ref(0)
 
 /**
  * ボトルの右のヒビの入った回数
  */
- const bottleRightClashes = ref(0)
+ const bottleTopClashes = ref(0)
 
  /**
   * ゲームがプレイ可能かどうか
@@ -36,16 +36,32 @@ const harisenbonBottomStyle = computed(() => {
   if (!moveRef.value) return BOTTLE_HEIGHT / 2 - HARISENBON_WIDTH / 2
   const currentPosition = parseInt(moveRef.value.style.bottom || '0', 10) || 0
   console.log(currentPosition)
-  const newPosition = currentPosition + (tilt || 0)
+  const newPosition = currentPosition + (tilt || 0) * 1.2
   return Math.max(0, Math.min(BOTTLE_HEIGHT - HARISENBON_WIDTH, newPosition)) // ボトル内に収める
 })
 
-watch(harisenbonBottomStyle, () => {
-  if (harisenbonBottomStyle.value === 0) {
-    bottleLeftClashes.value++
-  }
-  if (harisenbonBottomStyle.value === BOTTLE_HEIGHT - HARISENBON_WIDTH) {
-    bottleRightClashes.value++
+
+
+watch([accelerationIncludingGravity, rotationRate], ([newAcceleration, newRotationRate]) => {
+  const { x, y, z } = newAcceleration || {}
+  const { beta } = newRotationRate || {}
+
+  // 勢いの閾値を設定します
+  const threshold = 15
+
+  // 勢いの計算（回転率の beta を加える）
+  const momentum = Math.sqrt(((x || 0) + (beta || 0)) ** 2 + (y || 0) ** 2 + (z || 0) ** 2)
+
+  if (momentum > threshold) {
+    // ハリセンボンをクラッシュさせる処理を追加します
+    if (harisenbonBottomStyle.value === 0) {
+      bottleBottomClashes.value++
+      // ボトルがクラッシュした状態にするなどの処理を追加します
+    }
+    if (harisenbonBottomStyle.value === BOTTLE_HEIGHT - HARISENBON_WIDTH) {
+      bottleTopClashes.value++
+      // ボトルがクラッシュした状態にするなどの処理を追加します
+    }
   }
 })
 
@@ -53,9 +69,13 @@ watch(harisenbonBottomStyle, () => {
 
 <template>
   <div class="wrapper">
-    <!-- <dialog class="dialog" :open="!canPlayGame">
+    <dialog class="dialog" :open="!canPlayGame">
       このゲームはお使いのデバイスでは使用できません！
-    </dialog> -->
+    </dialog>
+    <div class="info">
+      bottleTopClashes: {{ bottleTopClashes }}<br>
+      bottleBottomClashes: {{ bottleBottomClashes }}
+    </div>
     <Bottle>
       <div ref="moveRef" class="move" :style="{ bottom: `${harisenbonBottomStyle}px` }">
         <Harisenbon />
@@ -73,6 +93,7 @@ watch(harisenbonBottomStyle, () => {
 .move {
   position: absolute;
   left: calc(50% - 25px + 20px);
+  height: 50px;
 }
 
 .dialog {
