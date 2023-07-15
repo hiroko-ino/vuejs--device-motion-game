@@ -29,10 +29,15 @@ const bottleBottomClashes = ref(0)
  const canPlayGame = computed(() => window.DeviceOrientationEvent && isSupported && accelerationIncludingGravity.value?.x !== null)
 
 /**
+ * オリエンテーションが縦かどうか
+ */
+const isOrientationPortrait = computed(() => orientation.value === 'portrait-secondary' || orientation.value === 'portrait-primary')
+
+/**
  * ハリセンボンのwrapperスタイルのleft
  */
 const harisenbonBottomStyle = computed(() => {
-  const tilt = orientation.value === 'portrait-secondary' || orientation.value === 'portrait-primary' ? accelerationIncludingGravity.value?.y : accelerationIncludingGravity.value?.x
+  const tilt = isOrientationPortrait ? accelerationIncludingGravity.value?.y : accelerationIncludingGravity.value?.x
   if (!moveRef.value) return BOTTLE_HEIGHT / 2 - HARISENBON_WIDTH / 2
   const currentPosition = parseInt(moveRef.value.style.bottom || '0', 10) || 0
   console.log(currentPosition)
@@ -42,15 +47,15 @@ const harisenbonBottomStyle = computed(() => {
 
 
 
-watch([accelerationIncludingGravity, rotationRate], ([newAcceleration, newRotationRate]) => {
-  const { x, y, z } = newAcceleration || {}
-  const { beta } = newRotationRate || {}
+watch(harisenbonBottomStyle, () => {
+  const { x, y, z } = accelerationIncludingGravity.value || {}
+  const { alpha, beta } = rotationRate.value || {}
 
   // 勢いの閾値を設定します
   const threshold = 15
 
   // 勢いの計算（回転率の beta を加える）
-  const momentum = Math.sqrt(((x || 0) + (beta || 0)) ** 2 + (y || 0) ** 2 + (z || 0) ** 2)
+  const momentum = Math.sqrt(((x || 0) + ((isOrientationPortrait ? beta : alpha) || 0)) ** 2 + (y || 0) ** 2 + (z || 0) ** 2)
 
   if (momentum > threshold) {
     // ハリセンボンをクラッシュさせる処理を追加します
