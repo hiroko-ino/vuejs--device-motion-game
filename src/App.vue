@@ -73,6 +73,7 @@ watch(harisenbonBottomStyle, () => {
 .move {
   position: absolute;
   left: calc(50% - 25px + 20px);
+  height: 50px;
 }
 
 .dialog {
